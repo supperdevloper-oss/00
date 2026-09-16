@@ -1,0 +1,5 @@
+# Paraveda CRM v3.72 — حماية الملفات الحساسة (إلا كانت البيانات فـ public_html)
+<FilesMatch "^(crm_data\.json|audit\.log|audit\.log\.1|journal\.log|journal\.log\.1|\.crm\.lock|INSTALL\.txt|.*\.tmp.*)$">
+  Require all denied
+</FilesMatch>
+Options -Indexes
