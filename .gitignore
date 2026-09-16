@@ -1,0 +1,5 @@
+public_html/backups/
+public_html/journal.log
+public_html/audit.log
+public_html/.crm.lock
+*.log
