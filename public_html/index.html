@@ -339,8 +339,8 @@
         <p>النشر كيدوز غير للصفحات المربوطة رسمياً. المجموعات كتبقى يدوية باش نحترمو قواعد فيسبوك.</p>
       </div>
       <div class="profile">
-        <div class="avatar">ي</div>
-        <div><div class="profile-name">حسابي التجريبي</div><div class="profile-note">وضع تجريبي محلي</div></div>
+        <div class="avatar" aria-hidden="true"></div>
+        <div><div class="profile-note" style="margin-top:0">وضع تجريبي محلي</div></div>
         <div class="dots">•••</div>
       </div>
     </aside>
@@ -358,7 +358,7 @@
 
       <div class="content">
         <section class="page-view active" id="view-home">
-          <div class="welcome"><div><h2>صباح الخير، ياسين 👋</h2><p>خلي المحتوى عليك، ووصلة تهلا فالتنظيم والنشر الآمن.</p></div><span class="demo-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M3 12h4M17 12h4M4.2 19.8 7 17M17 7l2.8-2.8"/></svg>وضع تجريبي — البيانات كتبقى فهاد الجهاز</span></div>
+          <div class="welcome"><div><h2>صباح الخير 👋</h2><p>خلي المحتوى عليك، ووصلة تهلا فالتنظيم والنشر الآمن.</p></div><span class="demo-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M3 12h4M17 12h4M4.2 19.8 7 17M17 7l2.8-2.8"/></svg>وضع تجريبي — البيانات كتبقى فهاد الجهاز</span></div>
           <div class="notice notice-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg><div><strong>أول مرة هنا؟ مرحبا بك فوصلة.</strong><span>ربط الصفحات كيدوز من نافذة فيسبوك الرسمية فقط. ما تدخلش كلمة السر ديالك هنا، وما غاديش ننشرو فالمجموعات بشكل آلي.</span></div><button data-modal="connect">ربط حساب رسمي</button></div>
           <div class="kpis">
             <div class="kpi"><div class="kpi-top"><span>الصفحات المربوطة</span><span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M8 15h8M8 9h.01M11.5 9h4.5"/></svg></span></div><div class="kpi-value" id="kpiPages">3</div><div class="kpi-foot">كلها خدامة مزيان</div></div>
@@ -462,7 +462,7 @@
     function getPostTitle() { const raw=$('#postText').value.trim(); return raw.split('\n').find(Boolean)?.slice(0,90) || 'منشور بلا عنوان'; }
     function openModal(type) {
       const modal=$('#mainModal');
-      if(type==='connect') modal.innerHTML=`<div class="modal-head"><div><h3 id="modalTitle">ربط الصفحات بالطريقة الرسمية</h3><p>أمان الحساب أهم من أي زر نشر. هاد الخطوة كتفتح Meta الرسمي، وما كتطلبش كلمة السر داخل وصلة.</p></div><button class="modal-close" data-close>${icons.more.replace('circle cx="5" cy="12" r="1"','path d="M6 6l12 12M18 6 6 18"').replace('<circle cx="12" cy="12" r="1"/>','')}</button></div><div class="oauth-card">${icons.link}<div><b>OAuth الرسمي ديال Meta</b><span>فالنشر الحقيقي، غير الصلاحيات الضرورية كتطلب: اختيار الصفحات والنشر فيها. أي صلاحية زايدة ما كنحتاجوهاش.</span></div></div><div class="modal-list"><div>${icons.check}<span>ما تعطيش كلمة السر لأي أداة كتقول لك "ربط سريع".</span></div><div>${icons.check}<span>الصفحات المربوطة كتبان هنا من بعد الموافقة الرسمية.</span></div><div>${icons.check}<span>المجموعات ما غاديش تتربط بالنشر الآلي.</span></div></div><div class="modal-actions"><button class="btn btn-primary" id="demoConnect">كمل بالوضع التجريبي</button><button class="btn btn-outline" data-close>نسد</button></div>`;
+      if(type==='connect') modal.innerHTML=`<div class="modal-head"><div><h3 id="modalTitle">ربط الصفحات بالطريقة الرسمية</h3><p>الربط الحقيقي مازال ما تفعّلش فهاد النسخة التجريبية. ما تدخل حتى كلمة سر داخل وصلة.</p></div><button class="modal-close" data-close>×</button></div><div class="oauth-card">${icons.link}<div><b>كيفاش كيخدم الربط الحقيقي؟</b><span>خاص Meta App باسمك + OAuth رسمي + إعداد فالسيرفر. من بعد كتوافق من نافذة Meta، وكتبان غير الصفحات اللي عندك عليها صلاحية الإدارة.</span></div></div><div class="modal-list"><div>${icons.check}<span><strong>دابا:</strong> جرّب المحرر والبرمجة فالوضع التجريبي.</span></div><div>${icons.check}<span><strong>للربط live:</strong> خاص المطوّر يربط Meta App ويطلب غير صلاحيات الصفحات الضرورية.</span></div><div>${icons.check}<span><strong>المجموعات:</strong> ما فيهاش ربط آلي هنا؛ كنخليوها مشاركة يدوية باش ما نستعملوش كلمة السر ولا طرق ملتوية.</span></div></div><div class="modal-actions"><a class="btn btn-primary" href="https://business.facebook.com/latest/home" target="_blank" rel="noopener">فتح Meta Business Suite</a><button class="btn btn-outline" id="demoConnect">بقا فالتجريبي</button></div>`;
       else modal.innerHTML=`<div class="modal-head"><div><h3 id="modalTitle">مساعدة سريعة</h3><p>هاد النسخة مصممة باش تكون واضحة حتى إلا ما كنتيش مبرمج.</p></div><button class="modal-close" data-close>×</button></div><div class="modal-list" style="margin-top:22px"><div>${icons.check}<span>دير منشور جديد، زيد الكتابة والصورة.</span></div><div>${icons.check}<span>اختار الصفحات فقط، أو استعمل مساعدة يدوية للمجموعات.</span></div><div>${icons.check}<span>راجع المعاينة، ومن بعد برمج ولا نشر.</span></div><div>${icons.check}<span>إلى بغيتي النشر الحقيقي، خاص إعداد Meta App وOAuth رسمي فالسيرفر ديالك.</span></div></div><div class="modal-actions"><button class="btn btn-primary" data-close>فهمت، شكراً</button></div>`;
       $('#modalBackdrop').classList.add('show');
       $$('[data-close]', modal).forEach(b=>b.addEventListener('click',closeModal));
