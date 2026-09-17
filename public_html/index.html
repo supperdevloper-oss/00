@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="ar-MA" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fc">
+  <title>وصلة — نشر آمن على صفحاتك</title>
+  <style>
+    :root {
+      --ink: #152238;
+      --muted: #72809a;
+      --faint: #9aa6b9;
+      --line: #e8edf5;
+      --surface: #fff;
+      --wash: #f7f8fc;
+      --navy: #19253c;
+      --navy-2: #223451;
+      --purple: #7758f6;
+      --purple-2: #6645e9;
+      --purple-soft: #f1efff;
+      --teal: #16b8a6;
+      --teal-soft: #e7fbf8;
+      --orange: #fb9b5d;
+      --orange-soft: #fff4e9;
+      --red: #ef6373;
+      --red-soft: #fff0f2;
+      --shadow: 0 16px 44px rgba(40, 53, 88, .08);
+      --shadow-sm: 0 5px 18px rgba(40, 53, 88, .06);
+      --radius: 18px;
+      --font: Tahoma, Arial, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--wash); }
+    body { margin: 0; color: var(--ink); background: var(--wash); font-family: var(--font); font-size: 14px; }
+    button, input, textarea, select { font: inherit; }
+    button { border: 0; cursor: pointer; }
+    button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 3px solid rgba(119,88,246,.22); outline-offset: 2px; }
+    a { color: inherit; text-decoration: none; }
+    .app-shell { min-height: 100vh; display: flex; }
+    .sidebar { width: 254px; background: var(--navy); color: #e9eef8; padding: 24px 16px 18px; display: flex; flex-direction: column; flex: 0 0 254px; }
+    .brand { display:flex; align-items:center; gap: 11px; padding: 0 11px 26px; }
+    .brand-mark { width: 38px; height: 38px; border-radius: 13px; color: white; background: linear-gradient(135deg, #927aff, #6849ef); display:grid; place-items:center; box-shadow: 0 8px 18px rgba(111,78,237,.3); }
+    .brand-mark svg { width: 21px; height: 21px; }
+    .brand-name { font-size: 19px; font-weight: 800; letter-spacing: -.5px; }
+    .brand-sub { font-size: 10px; color: #91a0b9; margin-top: 3px; }
+    .side-label { color: #71819c; font-size: 11px; font-weight: 700; padding: 4px 15px 9px; }
+    .side-nav { display:flex; flex-direction:column; gap: 4px; }
+    .side-nav button { background: transparent; color: #aebbd0; text-align: right; border-radius: 12px; padding: 11px 13px; display:flex; align-items:center; gap: 12px; transition: .18s ease; }
+    .side-nav button svg { width: 18px; height:18px; flex: 0 0 auto; opacity: .92; }
+    .side-nav button:hover { color:#fff; background: rgba(255,255,255,.07); }
+    .side-nav button.active { color:#fff; background: linear-gradient(90deg, rgba(119,88,246,.35), rgba(119,88,246,.16)); box-shadow: inset 3px 0 0 #927aff; }
+    .nav-count { margin-right:auto; min-width: 22px; text-align:center; border-radius: 20px; padding: 3px 6px; color: #d7d0ff; background: rgba(119,88,246,.28); font-size: 11px; }
+    .sidebar-spacer { flex: 1; }
+    .safe-box { border:1px solid rgba(255,255,255,.08); background: rgba(255,255,255,.055); border-radius: 15px; padding: 13px; margin: 18px 4px 16px; }
+    .safe-box-head { display:flex; align-items:center; gap: 8px; color: #f5f7ff; font-weight: 700; font-size: 12px; }
+    .safe-dot { width: 8px; height: 8px; border-radius:50%; background: var(--teal); box-shadow: 0 0 0 4px rgba(22,184,166,.13); }
+    .safe-box p { color: #96a4bb; font-size: 11px; line-height:1.65; margin: 9px 0 0; }
+    .profile { display:flex; align-items:center; gap:9px; padding: 11px 7px 0; border-top:1px solid rgba(255,255,255,.08); }
+    .avatar { width: 31px; height:31px; border-radius:11px; display:grid; place-items:center; font-weight:800; color:#fff; background: linear-gradient(135deg,#f7ad78,#ef6e7e); }
+    .profile-name { font-size: 12px; font-weight: 700; }
+    .profile-note { color:#8190a9; font-size:10px; margin-top: 2px; }
+    .dots { margin-right:auto; color:#9aa8be; letter-spacing:2px; }
+    .main { flex:1; min-width:0; }
+    .topbar { height: 80px; background: rgba(255,255,255,.8); border-bottom:1px solid var(--line); display:flex; align-items:center; justify-content:space-between; padding: 0 42px; position:sticky; top:0; z-index:5; backdrop-filter: blur(14px); }
+    .top-title h1 { margin:0; font-size: 21px; letter-spacing:-.4px; }
+    .top-title p { margin: 6px 0 0; color: var(--muted); font-size: 12px; }
+    .top-actions { display:flex; align-items:center; gap: 12px; }
+    .secure-status { display:flex; align-items:center; gap:7px; color:#4a907e; background:var(--teal-soft); border-radius: 20px; padding:8px 12px; font-size:11px; font-weight:700; }
+    .secure-status svg { width:14px; height:14px; }
+    .icon-btn { width: 37px; height:37px; background:#fff; color:var(--muted); border:1px solid var(--line); border-radius:11px; display:grid; place-items:center; position:relative; }
+    .icon-btn svg { width:18px; height:18px; }
+    .bell-dot { width:6px; height:6px; border-radius:50%; background:var(--red); position:absolute; top:7px; right:7px; border:1px solid #fff; }
+    .content { max-width: 1440px; padding: 32px 42px 55px; margin:0 auto; }
+    .page-view { display:none; animation: rise .28s ease both; }
+    .page-view.active { display:block; }
+    @keyframes rise { from {opacity:0; transform:translateY(5px)} to {opacity:1; transform:none} }
+    .welcome { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 25px; gap:20px; }
+    .welcome h2 { margin:0; font-size: 25px; letter-spacing:-.7px; }
+    .welcome p { margin: 8px 0 0; color:var(--muted); }
+    .btn { border-radius: 11px; padding: 11px 17px; display:inline-flex; gap:8px; align-items:center; justify-content:center; font-weight:700; transition:transform .15s, box-shadow .15s, background .15s; }
+    .btn:hover { transform:translateY(-1px); }
+    .btn svg { width:16px; height:16px; }
+    .btn-primary { color:#fff; background:linear-gradient(135deg,var(--purple),var(--purple-2)); box-shadow: 0 8px 17px rgba(119,88,246,.19); }
+    .btn-primary:hover { box-shadow: 0 11px 23px rgba(119,88,246,.28); }
+    .btn-soft { color:var(--purple-2); background:var(--purple-soft); }
+    .btn-outline { color:var(--ink); background:#fff; border:1px solid var(--line); }
+    .btn-ghost { color:var(--muted); background:transparent; }
+    .btn-danger { color:#c94958; background:var(--red-soft); }
+    .btn[disabled] { opacity:.5; cursor:not-allowed; transform:none; box-shadow:none; }
+    .demo-badge { display:inline-flex; align-items:center; gap:6px; color:#9c6940; background:var(--orange-soft); border:1px solid #ffe0c4; border-radius:20px; padding:6px 10px; font-size:10px; font-weight:700; }
+    .demo-badge svg { width:13px; height:13px; }
+    .kpis { display:grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 22px; }
+    .kpi { min-height:123px; background:var(--surface); border:1px solid var(--line); box-shadow:var(--shadow-sm); border-radius:16px; padding: 19px; position:relative; overflow:hidden; }
+    .kpi:after { content:""; position:absolute; width:83px; height:83px; border-radius:50%; left:-26px; bottom:-44px; opacity:.48; background:var(--purple-soft); }
+    .kpi.teal:after { background:var(--teal-soft); }
+    .kpi.orange:after { background:var(--orange-soft); }
+    .kpi.red:after { background:var(--red-soft); }
+    .kpi-top { display:flex; justify-content:space-between; align-items:center; color:var(--muted); font-size:12px; }
+    .kpi-icon { width:33px; height:33px; border-radius:11px; display:grid; place-items:center; background:var(--purple-soft); color:var(--purple); }
+    .teal .kpi-icon { color:var(--teal); background:var(--teal-soft); }
+    .orange .kpi-icon { color:#e88944; background:var(--orange-soft); }
+    .red .kpi-icon { color:var(--red); background:var(--red-soft); }
+    .kpi-icon svg { width:17px; height:17px; }
+    .kpi-value { font-size:28px; line-height:1; margin-top: 17px; font-weight:800; letter-spacing:-1px; }
+    .kpi-foot { font-size:10px; color:var(--faint); margin-top:8px; }
+    .kpi-foot strong { color:var(--teal); font-size:10px; }
+    .grid-main { display:grid; grid-template-columns: minmax(0, 1.42fr) minmax(320px, .88fr); gap: 22px; align-items:start; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow-sm); }
+    .card-head { display:flex; justify-content:space-between; align-items:center; padding: 20px 21px 15px; }
+    .card-head h3 { margin:0; font-size:16px; }
+    .card-head p { margin:5px 0 0; color:var(--muted); font-size:11px; }
+    .card-head .text-link { color:var(--purple); font-size:11px; font-weight:700; cursor:pointer; }
+    .card-body { padding: 0 21px 21px; }
+    .notice { border-radius: 14px; padding: 14px 16px; display:flex; gap:11px; align-items:flex-start; margin-bottom: 22px; }
+    .notice-info { background:#f2f1ff; color:#5945ad; }
+    .notice svg { width:18px; height:18px; flex:0 0 auto; margin-top:1px; }
+    .notice strong { display:block; font-size:12px; margin-bottom:4px; }
+    .notice span { font-size:11px; line-height:1.7; color:#736aa4; }
+    .notice button { margin-right:auto; color:#5945ad; background:transparent; font-size:11px; font-weight:700; white-space:nowrap; }
+    .composer-mini { background:linear-gradient(135deg,#fbfbff,#f4f1ff); border:1px solid #e5e1ff; border-radius:16px; padding:18px; display:flex; gap:15px; align-items:center; }
+    .mini-preview { width:83px; height:83px; flex:0 0 83px; border-radius:14px; display:grid; place-items:center; color:#9b91d6; background:#eae5ff; overflow:hidden; }
+    .mini-preview svg { width:28px; height:28px; }
+    .mini-preview img { width:100%; height:100%; object-fit:cover; }
+    .composer-mini h4 { margin:0 0 7px; font-size:13px; }
+    .composer-mini p { color:var(--muted); margin:0 0 12px; font-size:11px; line-height:1.6; }
+    .activity-list { display:flex; flex-direction:column; gap: 2px; }
+    .activity { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid #f0f2f6; }
+    .activity:last-child { border-bottom:0; }
+    .activity-thumb { width:41px; height:41px; border-radius:12px; background:#eeeafe; color:var(--purple); display:grid; place-items:center; flex:0 0 41px; overflow:hidden; }
+    .activity-thumb img { width:100%; height:100%; object-fit:cover; }
+    .activity-info { min-width:0; flex:1; }
+    .activity-title { font-size:12px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .activity-meta { color:var(--muted); font-size:10px; margin-top:5px; }
+    .status { padding:5px 8px; border-radius:7px; font-size:10px; font-weight:700; white-space:nowrap; }
+    .status.scheduled { color:#866327; background:#fff6dc; }
+    .status.published { color:#298471; background:#e9faf6; }
+    .status.draft { color:#66748c; background:#f1f3f6; }
+    .status.manual { color:#8654a9; background:#f5eaff; }
+    .page-list { display:flex; flex-direction:column; gap:11px; }
+    .page-row { border:1px solid var(--line); border-radius:13px; display:flex; align-items:center; gap:11px; padding:12px; }
+    .page-logo { width:38px; height:38px; border-radius:12px; color:#fff; display:grid; place-items:center; font-size:13px; font-weight:800; flex:0 0 38px; }
+    .page-logo.one { background:linear-gradient(135deg,#f79e67,#ee6d77); }
+    .page-logo.two { background:linear-gradient(135deg,#35b9ae,#3986cd); }
+    .page-logo.three { background:linear-gradient(135deg,#8c70ec,#bd62aa); }
+    .page-info { flex:1; min-width:0; }
+    .page-name { font-weight:700; font-size:12px; }
+    .page-followers { margin-top:5px; font-size:10px; color:var(--muted); }
+    .connected { width:8px; height:8px; border-radius:50%; background:#20bb94; box-shadow:0 0 0 4px #e8faf4; margin-left:4px; }
+    .audience-note { margin-top:15px; display:flex; align-items:center; gap:8px; color:var(--muted); background:#fafbfc; padding:11px 12px; border-radius:11px; font-size:10px; line-height:1.55; }
+    .audience-note svg { color:var(--orange); width:16px; flex:0 0 auto; }
+    .progress-wrap { margin-top:20px; }
+    .progress-title { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); margin-bottom:8px; }
+    .progress-title strong { color:var(--ink); }
+    .progress { height:7px; background:#eef1f6; border-radius:8px; overflow:hidden; }
+    .progress i { height:100%; width:72%; display:block; background:linear-gradient(90deg,#8270f7,#5dcbba); border-radius:8px; }
+    .section-title { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; }
+    .section-title h2 { margin:0; font-size:22px; }
+    .section-title p { margin:7px 0 0; color:var(--muted); font-size:12px; }
+    .composer-layout { display:grid; grid-template-columns: minmax(0,1.2fr) minmax(320px,.8fr); gap:22px; align-items:start; }
+    .form-card { padding: 23px; }
+    .form-card h3 { margin:0 0 5px; font-size:16px; }
+    .form-card .sub { color:var(--muted); font-size:11px; margin:0 0 20px; }
+    .form-label { display:flex; justify-content:space-between; align-items:center; font-size:12px; font-weight:700; margin-bottom:8px; }
+    .form-label span { color:var(--faint); font-size:10px; font-weight:400; }
+    textarea, input, select { width:100%; border:1px solid var(--line); color:var(--ink); background:#fff; border-radius:11px; padding:12px 13px; transition:border .15s, box-shadow .15s; }
+    textarea:focus, input:focus, select:focus { border-color:#b6a9fd; box-shadow:0 0 0 4px rgba(119,88,246,.08); outline:0; }
+    textarea { resize:vertical; min-height:145px; line-height:1.9; }
+    .field { margin-bottom:18px; }
+    .suggestions { display:flex; gap:7px; flex-wrap:wrap; margin-top:9px; }
+    .suggestions button { color:#7663d8; background:#f5f3ff; border-radius:20px; padding:6px 9px; font-size:10px; }
+    .suggestions button:hover { background:#ebe7ff; }
+    .media-drop { border:1.5px dashed #c9c1f9; background:#faf9ff; min-height:104px; border-radius:13px; display:flex; align-items:center; justify-content:center; text-align:center; color:#8579ba; padding:15px; cursor:pointer; transition:.15s; }
+    .media-drop:hover, .media-drop.dragging { background:#f1efff; border-color:var(--purple); }
+    .media-drop svg { width:25px; height:25px; display:block; margin:0 auto 7px; }
+    .media-drop strong { display:block; color:#6656b5; font-size:11px; }
+    .media-drop span { display:block; color:#a29abf; font-size:10px; margin-top:4px; }
+    .media-preview { display:flex; gap:10px; align-items:center; background:#fafbfc; border:1px solid var(--line); padding:9px; border-radius:13px; }
+    .media-preview img { width:78px; height:64px; object-fit:cover; border-radius:9px; }
+    .media-preview b { font-size:11px; display:block; }
+    .media-preview small { color:var(--muted); display:block; margin-top:6px; }
+    .media-preview button { margin-right:auto; color:var(--red); background:transparent; font-size:11px; }
+    .form-actions { display:flex; justify-content:flex-start; gap:9px; border-top:1px solid var(--line); padding-top:18px; margin-top:22px; }
+    .checkline { display:flex; align-items:flex-start; gap:9px; color:var(--muted); font-size:11px; line-height:1.65; margin:13px 0 0; }
+    .checkline input { width:16px; height:16px; accent-color:var(--purple); margin:1px 0 0; flex:0 0 auto; }
+    .target-card { padding:22px; }
+    .target-card h3 { margin:0 0 5px; font-size:15px; }
+    .target-card .sub { color:var(--muted); font-size:11px; margin:0 0 17px; }
+    .target-list { display:flex; flex-direction:column; gap:9px; }
+    .target { display:flex; align-items:center; gap:10px; border:1px solid var(--line); border-radius:12px; padding:10px; cursor:pointer; transition:.15s; }
+    .target:hover { border-color:#c9c1f9; }
+    .target.checked { background:#faf9ff; border-color:#c7bcff; }
+    .target input { width:16px; height:16px; accent-color:var(--purple); flex:0 0 auto; }
+    .target .page-logo { width:32px; height:32px; border-radius:10px; font-size:11px; flex-basis:32px; }
+    .target-details { flex:1; min-width:0; }
+    .target-details b { display:block; font-size:11px; }
+    .target-details small { display:block; margin-top:4px; color:var(--muted); font-size:9px; }
+    .target .lock { color:#afb7c7; }
+    .target .lock svg { width:15px; height:15px; }
+    .target.group-target { cursor:default; opacity:.78; background:#fcfcfd; }
+    .target-footer { color:var(--muted); font-size:10px; line-height:1.65; margin-top:14px; padding-top:13px; border-top:1px solid var(--line); }
+    .target-footer strong { color:#7254d5; }
+    .schedule-box { margin-top:18px; background:#fbfbfd; border-radius:14px; padding:14px; }
+    .schedule-box .form-label { margin-bottom:10px; }
+    .schedule-row { display:grid; grid-template-columns: 1fr 1fr; gap:8px; }
+    .safety-card { padding:21px; margin-top:18px; }
+    .safety-head { display:flex; gap:11px; align-items:center; }
+    .safety-icon { width:34px; height:34px; display:grid; place-items:center; background:var(--teal-soft); color:var(--teal); border-radius:11px; }
+    .safety-icon svg { width:18px; height:18px; }
+    .safety-head h3 { margin:0; font-size:13px; }
+    .safety-head p { margin:4px 0 0; color:var(--muted); font-size:10px; }
+    .safety-items { display:grid; gap:10px; margin-top:16px; }
+    .safety-item { display:flex; gap:8px; color:var(--muted); font-size:10px; line-height:1.5; }
+    .safety-item svg { color:var(--teal); width:15px; height:15px; flex:0 0 auto; }
+    .table-card { padding:20px 21px; }
+    .table-tools { display:flex; gap:9px; align-items:center; }
+    .search { position:relative; }
+    .search svg { position:absolute; right:11px; top:11px; width:16px; color:var(--faint); }
+    .search input { width:210px; padding-right:34px; padding-block:9px; font-size:11px; }
+    .filter { padding:9px 11px; font-size:11px; width:auto; }
+    .data-table { width:100%; border-collapse:collapse; margin-top:11px; }
+    .data-table th { color:var(--muted); background:#fafbfc; font-size:10px; font-weight:700; padding:11px 10px; text-align:right; }
+    .data-table th:first-child { border-radius:0 9px 9px 0; }
+    .data-table th:last-child { border-radius:9px 0 0 9px; }
+    .data-table td { border-bottom:1px solid #f0f2f6; padding:13px 10px; color:#4d5c75; font-size:11px; }
+    .data-table tr:last-child td { border-bottom:0; }
+    .post-cell { display:flex; align-items:center; gap:9px; min-width:190px; }
+    .post-cell .activity-thumb { width:35px; height:35px; flex-basis:35px; }
+    .post-cell b { color:var(--ink); font-size:11px; display:block; max-width:240px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .post-cell small { display:block; margin-top:4px; color:var(--muted); font-size:9px; }
+    .accounts-grid { display:grid; grid-template-columns: repeat(3,1fr); gap:16px; }
+    .account-card { padding:19px; position:relative; }
+    .account-top { display:flex; align-items:center; gap:11px; }
+    .account-card h3 { margin:0; font-size:13px; }
+    .account-card p { color:var(--muted); margin:6px 0 0; font-size:10px; }
+    .account-card .connected { margin-right:auto; }
+    .account-card hr { border:0; border-top:1px solid var(--line); margin:18px 0 14px; }
+    .account-foot { display:flex; align-items:center; justify-content:space-between; color:var(--muted); font-size:10px; }
+    .account-foot button { color:var(--purple); background:transparent; font-weight:700; font-size:10px; }
+    .safety-page { display:grid; grid-template-columns:1.06fr .94fr; gap:18px; }
+    .safety-big { padding:24px; }
+    .safety-big h3 { margin:0; font-size:16px; }
+    .safety-big > p { color:var(--muted); font-size:11px; line-height:1.8; margin:8px 0 22px; max-width:660px; }
+    .rule { display:flex; gap:12px; padding:15px 0; border-top:1px solid var(--line); }
+    .rule-num { width:27px; height:27px; border-radius:9px; color:var(--purple); background:var(--purple-soft); display:grid; place-items:center; font-weight:800; font-size:11px; flex:0 0 auto; }
+    .rule b { display:block; font-size:12px; }
+    .rule span { display:block; color:var(--muted); font-size:10px; line-height:1.7; margin-top:5px; }
+    .policy-callout { padding:22px; background:linear-gradient(135deg,#213351,#18243b); color:#fff; border-radius:18px; }
+    .policy-callout svg { width:29px; height:29px; color:#6fd8c7; }
+    .policy-callout h3 { margin:17px 0 8px; font-size:17px; }
+    .policy-callout p { color:#acbad0; font-size:11px; line-height:1.8; margin:0; }
+    .policy-callout .btn { margin-top:21px; color:#1e3150; background:#fff; font-size:11px; }
+    .empty { text-align:center; padding:48px 20px; color:var(--muted); }
+    .empty svg { width:36px; height:36px; color:#a699ef; margin-bottom:10px; }
+    .empty h3 { color:var(--ink); margin:0 0 7px; font-size:14px; }
+    .empty p { font-size:11px; margin:0 0 18px; }
+    .modal-backdrop { position:fixed; inset:0; background:rgba(15,24,42,.42); display:none; place-items:center; z-index:20; padding:18px; backdrop-filter:blur(3px); }
+    .modal-backdrop.show { display:grid; }
+    .modal { width:min(510px,100%); background:#fff; border-radius:20px; box-shadow:0 24px 80px rgba(20,30,55,.25); padding:24px; animation:modalIn .2s ease both; }
+    @keyframes modalIn { from { transform:translateY(10px) scale(.98); opacity:0 } to { transform:none; opacity:1 } }
+    .modal-head { display:flex; justify-content:space-between; align-items:flex-start; gap:15px; }
+    .modal-head h3 { margin:0; font-size:17px; }
+    .modal-head p { color:var(--muted); font-size:11px; line-height:1.7; margin:7px 0 0; }
+    .modal-close { color:var(--muted); background:#f5f6f8; width:30px; height:30px; display:grid; place-items:center; border-radius:9px; }
+    .modal-close svg { width:16px; }
+    .oauth-card { border:1px solid #d9d3ff; background:#faf9ff; border-radius:15px; padding:15px; display:flex; gap:11px; margin-top:20px; }
+    .oauth-card svg { width:21px; color:var(--purple); flex:0 0 auto; }
+    .oauth-card b { display:block; font-size:12px; }
+    .oauth-card span { display:block; font-size:10px; color:var(--muted); line-height:1.7; margin-top:4px; }
+    .modal-list { display:grid; gap:9px; margin:18px 0 0; }
+    .modal-list div { display:flex; align-items:flex-start; gap:8px; color:var(--muted); font-size:11px; line-height:1.55; }
+    .modal-list svg { color:var(--teal); width:15px; flex:0 0 auto; margin-top:1px; }
+    .modal-actions { display:flex; gap:9px; justify-content:flex-start; margin-top:22px; padding-top:16px; border-top:1px solid var(--line); }
+    .toast { position:fixed; bottom:24px; right:24px; z-index:30; background:#20304b; color:#fff; border-radius:12px; padding:13px 16px; box-shadow:0 12px 30px rgba(20,30,55,.2); display:flex; align-items:center; gap:9px; font-size:11px; transform:translateY(18px); opacity:0; pointer-events:none; transition:.25s; }
+    .toast.show { transform:none; opacity:1; }
+    .toast svg { color:#65d6c3; width:17px; }
+    .mobile-menu { display:none; }
+    @media (max-width: 1100px) {
+      .sidebar { width:220px; flex-basis:220px; }
+      .content { padding-inline:25px; }
+      .topbar { padding-inline:25px; }
+      .grid-main, .composer-layout, .safety-page { grid-template-columns:1fr; }
+      .accounts-grid { grid-template-columns:repeat(2,1fr); }
+    }
+    @media (max-width: 760px) {
+      .sidebar { position:fixed; right:0; top:0; bottom:0; transform:translateX(105%); transition:.25s; z-index:12; box-shadow:-10px 0 30px rgba(20,30,55,.2); }
+      .sidebar.open { transform:none; }
+      .mobile-menu { display:grid; width:37px; height:37px; place-items:center; background:#fff; border:1px solid var(--line); border-radius:11px; color:var(--ink); }
+      .mobile-menu svg { width:18px; }
+      .topbar { height:70px; padding:0 16px; }
+      .top-title h1 { font-size:16px; }
+      .top-title p { display:none; }
+      .top-actions { gap:7px; }
+      .secure-status { display:none; }
+      .content { padding:23px 15px 40px; }
+      .welcome { flex-direction:column; margin-bottom:20px; }
+      .welcome h2 { font-size:21px; }
+      .kpis { grid-template-columns:repeat(2,1fr); gap:10px; }
+      .kpi { padding:14px; min-height:107px; }
+      .kpi-value { font-size:23px; margin-top:13px; }
+      .kpi-top { font-size:10px; }
+      .card-head, .card-body { padding-inline:15px; }
+      .form-card, .target-card, .safety-card, .table-card, .safety-big, .account-card { padding:16px; }
+      .section-title { align-items:flex-start; gap:12px; }
+      .section-title h2 { font-size:19px; }
+      .accounts-grid { grid-template-columns:1fr; }
+      .table-tools { flex-wrap:wrap; }
+      .search, .search input { width:100%; }
+      .data-table { min-width:650px; }
+      .table-scroll { overflow:auto; }
+      .composer-mini { align-items:flex-start; }
+      .modal { padding:18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 8.5a5 5 0 0 1 8.5-3.54l1.04 1.04A5 5 0 0 1 13 14.5H9"/><path d="M17 15.5a5 5 0 0 1-8.5 3.54l-1.04-1.04A5 5 0 0 1 11 9.5h4"/></svg>
+        </div>
+        <div><div class="brand-name">وصلة</div><div class="brand-sub">نشر منظم وبلا صداع</div></div>
+      </div>
+      <div class="side-label">القائمة الرئيسية</div>
+      <nav class="side-nav" aria-label="التنقل الرئيسي">
+        <button class="active" data-view="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4 11 8-7 8 7v8a1 1 0 0 1-1 1h-4v-5H9v5H5a1 1 0 0 1-1-1v-8Z"/></svg><span>الرئيسية</span></button>
+        <button data-view="compose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m13 5 6 6M4 20l4.2-1 9.9-9.9a2.12 2.12 0 0 0-3-3L5.2 16 4 20Z"/></svg><span>منشور جديد</span></button>
+        <button data-view="scheduled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg><span>المبرمج والمنشورات</span><span class="nav-count" id="navCount">4</span></button>
+        <button data-view="accounts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M8 15h8M8 9h.01M11.5 9h4.5"/></svg><span>الحسابات والصفحات</span></button>
+      </nav>
+      <div class="side-label" style="margin-top:26px">المساعدة</div>
+      <nav class="side-nav">
+        <button data-view="safety"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg><span>قواعد النشر الآمن</span></button>
+        <button data-modal="help"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M9.7 9a2.35 2.35 0 1 1 3.96 1.7c-.97.82-1.66 1.32-1.66 2.8M12 16.8h.01"/></svg><span>مساعدة سريعة</span></button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="safe-box">
+        <div class="safe-box-head"><i class="safe-dot"></i><span>الوضع الآمن خدام</span></div>
+        <p>النشر كيدوز غير للصفحات المربوطة رسمياً. المجموعات كتبقى يدوية باش نحترمو قواعد فيسبوك.</p>
+      </div>
+      <div class="profile">
+        <div class="avatar">ي</div>
+        <div><div class="profile-name">حسابي التجريبي</div><div class="profile-note">وضع تجريبي محلي</div></div>
+        <div class="dots">•••</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="mobile-menu" id="mobileMenu" aria-label="فتح القائمة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+        <div class="top-title"><h1 id="topTitle">الرئيسية</h1><p id="topSubtitle">كلشي مرتب قدامك، والنشر كيدوز بهدوء.</p></div>
+        <div class="top-actions">
+          <span class="secure-status"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>حماية النشر مفعلة</span>
+          <button class="icon-btn" aria-label="الإشعارات"><span class="bell-dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg></button>
+          <button class="btn btn-primary" id="topNew"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>منشور جديد</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <section class="page-view active" id="view-home">
+          <div class="welcome"><div><h2>صباح الخير، ياسين 👋</h2><p>خلي المحتوى عليك، ووصلة تهلا فالتنظيم والنشر الآمن.</p></div><span class="demo-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v4M12 17v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M3 12h4M17 12h4M4.2 19.8 7 17M17 7l2.8-2.8"/></svg>وضع تجريبي — البيانات كتبقى فهاد الجهاز</span></div>
+          <div class="notice notice-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg><div><strong>أول مرة هنا؟ مرحبا بك فوصلة.</strong><span>ربط الصفحات كيدوز من نافذة فيسبوك الرسمية فقط. ما تدخلش كلمة السر ديالك هنا، وما غاديش ننشرو فالمجموعات بشكل آلي.</span></div><button data-modal="connect">ربط حساب رسمي</button></div>
+          <div class="kpis">
+            <div class="kpi"><div class="kpi-top"><span>الصفحات المربوطة</span><span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M8 15h8M8 9h.01M11.5 9h4.5"/></svg></span></div><div class="kpi-value" id="kpiPages">3</div><div class="kpi-foot">كلها خدامة مزيان</div></div>
+            <div class="kpi teal"><div class="kpi-top"><span>منشورات هاد السيمانة</span><span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 19 19 5M7 5h12v12"/></svg></span></div><div class="kpi-value" id="kpiPublished">24</div><div class="kpi-foot"><strong>+18%</strong> مقارنة مع السيمانة لفاتت</div></div>
+            <div class="kpi orange"><div class="kpi-top"><span>منشورات مبرمجة</span><span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3 2"/></svg></span></div><div class="kpi-value" id="kpiScheduled">4</div><div class="kpi-foot">أقرب واحد غدا مع 10:00</div></div>
+            <div class="kpi red"><div class="kpi-top"><span>نسبة الجاهزية</span><span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 17V7M10 17V4M16 17v-7M22 17V2"/></svg></span></div><div class="kpi-value">96<small style="font-size:14px">%</small></div><div class="kpi-foot">ما كاين حتى تنبيه مستعجل</div></div>
+          </div>
+          <div class="grid-main">
+            <div class="card"><div class="card-head"><div><h3>شنو بغيتي تدير دابا؟</h3><p>بدا بمنشور بسيط، وكمّل الخطوات وحدة بوحدة.</p></div><span class="text-link" data-view-link="compose">فتح المحرر</span></div><div class="card-body"><div class="composer-mini"><div class="mini-preview" id="miniPreview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m4 17 5-5 3 3 2-2 6 5"/></svg></div><div><h4>وجد منشور جديد لصفحاتك</h4><p>صورة + كتابة، اختار الصفحات، ومن بعد راجع كلشي قبل النشر.</p><button class="btn btn-soft" id="miniNew">بدا دابا <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div></div></div></div>
+            <div class="card"><div class="card-head"><div><h3>الصفحات ديالك</h3><p>آخر حالة للربط الرسمي</p></div><span class="text-link" data-view-link="accounts">شوف الكل</span></div><div class="card-body"><div class="page-list" id="homePages"></div><div class="audience-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3Z"/><path d="M12 8v4M12 15h.01"/></svg><span>الحسابات اللي ماشي صفحات كتحتاج مشاركة يدوية. هادي ماشي غلطة، هادي حماية ليك.</span></div></div></div>
+          </div>
+          <div class="grid-main" style="margin-top:22px"><div class="card"><div class="card-head"><div><h3>آخر النشاطات</h3><p>تتبع شنو تنشر وشنو باقي</p></div><span class="text-link" data-view-link="scheduled">التاريخ كامل</span></div><div class="card-body"><div class="activity-list" id="activityList"></div></div></div><div class="card"><div class="card-head"><div><h3>الاستعداد هاد السيمانة</h3><p>تنظيم بسيط كيخلي الحسابات طبيعية</p></div><span style="color:var(--teal);font-size:11px;font-weight:700">مزيان بزاف</span></div><div class="card-body"><div class="progress-wrap" style="margin-top:2px"><div class="progress-title"><span>المحتوى المحضر</span><strong>72%</strong></div><div class="progress"><i></i></div></div><div class="safety-items" style="margin-top:22px"><div class="safety-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span>كاين وقت بين المنشورات، ماشي كلشي مرة وحدة.</span></div><div class="safety-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span>كل منشور كيدوز من مراجعة قبل النشر.</span></div><div class="safety-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span>ما كنطلبوش منك كلمة السر ديال فيسبوك.</span></div></div></div></div></div>
+        </section>
+
+        <section class="page-view" id="view-compose">
+          <div class="section-title"><div><h2>منشور جديد</h2><p>وجد المحتوى، اختار الصفحات، وخلي آخر كلمة عندك.</p></div><span class="demo-badge">كل تغيير كيتحفظ تلقائياً</span></div>
+          <div class="composer-layout">
+            <div class="card form-card">
+              <h3>1. حضّر المحتوى</h3><p class="sub">كتب بطريقة طبيعية وخلي رسالتك واضحة للناس.</p>
+              <div class="field"><div class="form-label"><label for="postText">نص المنشور</label><span id="charCount">0 / 63206</span></div><textarea id="postText" placeholder="مثال: الجديد وصل ✨ شوفو التفاصيل وخليو لينا رأيكم..."></textarea><div class="suggestions"><button data-fill="✨ الجديد وصل! شوفو التفاصيل وخليو لينا رأيكم.">استعمل افتتاحية بسيطة</button><button data-fill="شنو رأيكم فهاد الفكرة؟ كتبولينا فالتعاليق 👇">سول الجمهور</button><button data-fill="شكراً على الثقة ديالكم. كنكبرو بكم كل نهار 🤍">رسالة شكر</button></div></div>
+              <div class="field"><div class="form-label"><span>الصورة</span><span>JPG / PNG · حجم معقول</span></div><label class="media-drop" for="imageInput" id="dropZone"><input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp" hidden><span id="dropCopy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m4 17 5-5 3 3 2-2 6 5"/></svg><strong>جر الصورة لهنا أو كليكي باش تختارها</strong><span>غادي تبان للمعاينة قبل النشر</span></span><span class="media-preview" id="mediaPreview" hidden></span></label></div>
+              <div class="form-actions"><button class="btn btn-primary" id="publishNow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m4 12 16-8-4 16-4-6-8-2Z"/><path d="m12 14 4-6"/></svg>راجع قبل النشر</button><button class="btn btn-outline" id="saveDraft">حفظ كمسودة</button><button class="btn btn-ghost" id="clearComposer">مسح</button></div>
+            </div>
+            <div>
+              <div class="card target-card"><h3>2. فين بغيتي تنشر؟</h3><p class="sub">اختار صفحة وحدة ولا أكثر. النشر الآلي كيتخدم غير مع الصفحات.</p><div class="target-list" id="targetList"></div><div class="target-footer"><strong>علاش المجموعات مسدودة؟</strong><br>فيسبوك ما كيوفرش دابا مسار رسمي آمن للنشر الآلي فالمجموعات. تقدر تنسخ المنشور وتشاركو يدوياً بنقرة.</div><div class="schedule-box"><div class="form-label"><span>وقت النشر</span><span id="scheduleHint">اختياري</span></div><div class="schedule-row"><select id="publishMode"><option value="now">دابا (بعد المراجعة)</option><option value="later">برمج لوقت آخر</option></select><input type="datetime-local" id="scheduleDate" disabled></div></div></div>
+              <div class="card safety-card"><div class="safety-head"><div class="safety-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div><div><h3>3. فحص السلامة</h3><p>غادي نوقفو أي خطوة ناقصة قبل الإرسال.</p></div></div><div class="safety-items"><div class="safety-item" id="safeText"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span>الكتابة واضحة وما فيهاش تكرار مبالغ فيه.</span></div><div class="safety-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span>غادي تكون مراجعة يدوية قبل النشر.</span></div><div class="safety-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span>ما كاينش نشر للمجموعات من هاد الأداة.</span></div></div><label class="checkline"><input type="checkbox" id="confirmReview"> قريت المحتوى وغادي نراجع المعاينة قبل ما يتنشر.</label></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page-view" id="view-scheduled">
+          <div class="section-title"><div><h2>المبرمج والمنشورات</h2><p>كلشي مجموع فبلاصة وحدة، بلا جداول معقدة.</p></div><button class="btn btn-primary" data-view-link="compose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>منشور جديد</button></div>
+          <div class="card table-card"><div class="table-tools"><div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg><input id="tableSearch" placeholder="قلب على منشور..."></div><select class="filter" id="statusFilter"><option value="all">كل الحالات</option><option value="scheduled">مبرمج</option><option value="published">تنشر</option><option value="draft">مسودة</option><option value="manual">مشاركة يدوية</option></select></div><div class="table-scroll"><table class="data-table"><thead><tr><th>المنشور</th><th>الوجهة</th><th>التاريخ</th><th>الحالة</th><th></th></tr></thead><tbody id="postsTable"></tbody></table></div></div>
+        </section>
+
+        <section class="page-view" id="view-accounts">
+          <div class="section-title"><div><h2>الحسابات والصفحات</h2><p>ربط رسمي، واضح، ومن غير ما نعطيو كلمة السر ديالك لأي جهة.</p></div><button class="btn btn-primary" data-modal="connect"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>ربط حساب رسمي</button></div>
+          <div class="notice notice-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg><div><strong>ما تدخل حتى كلمة سر هنا.</strong><span>فالوضع الحقيقي، الربط كيمشي مباشرة لنافذة Meta الرسمية. فهاد النسخة التجريبية، الصفحات اللي لتحت غير أمثلة باش تجرب سير العمل.</span></div></div>
+          <div class="accounts-grid" id="accountsGrid"></div>
+          <div class="card" style="margin-top:18px;padding:20px"><div class="card-head" style="padding:0 0 13px"><div><h3>الحسابات اللي كتحتاج مشاركة يدوية</h3><p>ماشي مربوطة بالنشر الآلي حفاظاً على سلامة الحساب.</p></div><span class="status manual">مساعدة يدوية</span></div><div class="target group-target" style="margin-top:5px"><div class="page-logo two">م</div><div class="target-details"><b>مجموعة مشروعك من دارك</b><small>نسخ النص + تحميل الصورة، ومن بعد نشر بيدك</small></div><button class="btn btn-soft" id="manualShare" style="padding:7px 10px;font-size:10px">فتح المساعدة</button></div></div>
+        </section>
+
+        <section class="page-view" id="view-safety">
+          <div class="section-title"><div><h2>قواعد النشر الآمن</h2><p>وصلة ما كتضمنش قبول أي محتوى، ولكن كتخليك تخدم بالطريقة الصحيحة.</p></div><span class="demo-badge">معلومات واضحة بلا تعقيد</span></div>
+          <div class="safety-page"><div class="card safety-big"><h3>شنو كتدير وصلة باش تبقى فالسليم؟</h3><p>الأداة مصممة باش تعاونك تنظم المحتوى، ماشي باش تدور على قيود المنصة. كل نشر حقيقي خاصو إذن رسمي من Meta ومراجعة منك.</p><div class="rule"><div class="rule-num">1</div><div><b>النشر الرسمي للصفحات فقط</b><span>الربط كيمر عبر OAuth الرسمي ديال Meta. ما كنسجلوش كلمة السر ديالك وما كنستعملوش طرق ملتوية.</span></div></div><div class="rule"><div class="rule-num">2</div><div><b>المجموعات = مشاركة يدوية</b><span>ما كنحاولوش نتحايلو على القيود ديال Facebook. كنوجدولك النص والصورة باش تنشرهم بيدك فالمجموعة.</span></div></div><div class="rule"><div class="rule-num">3</div><div><b>مراجعة قبل كل إرسال</b><span>ما كاينش زر سحري كينشر بلا ما تشوف. المعاينة والموافقة ديالك جزء من الأداة.</span></div></div><div class="rule"><div class="rule-num">4</div><div><b>تنظيم طبيعي، ماشي إغراق</b><span>خلي وقت مناسب بين المنشورات، بدّل المحتوى، وحترم الناس وقوانين الصفحات اللي كتدير فيها مشاركة.</span></div></div></div><div class="policy-callout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3 5 6v5c0 4.5 3 8.3 7 10 4-1.7 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg><h3>خدم بهدوء، وخلي القرار عندك</h3><p>إلا بان شي تحذير من Meta، وقف النشر وراجع المحتوى والحساب. ما تحاولش تعاود نفس العملية بسرعة.</p><button class="btn" data-modal="help">بغيت نعرف أكثر</button></div></div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal" id="mainModal"></div></div>
+  <div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg><span id="toastText"></span></div>
+
+  <script>
+    const icons = {
+      check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4L19 6"/></svg>',
+      link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10 13a5 5 0 0 0 7.54.54l2-2a5 5 0 0 0-7.07-7.07L11.32 5.6"/><path d="M14 11a5 5 0 0 0-7.54-.54l-2 2a5 5 0 0 0 7.07 7.07l1.15-1.13"/></svg>',
+      more: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>'
+    };
+    const defaultPages = [
+      { id:'p1', name:'مذاق مغربي', initials:'م', followers:'4.8K متابع', color:'one' },
+      { id:'p2', name:'دار العصري', initials:'د', followers:'2.1K متابع', color:'two' },
+      { id:'p3', name:'Atelier Atlas', initials:'A', followers:'8.2K متابع', color:'three' }
+    ];
+    const seedPosts = [
+      { id:1, title:'وصل الجديد ✨ شوفو التفاصيل وخليو لينا رأيكم.', page:'مذاق مغربي', date:'غدا، 10:00', status:'scheduled', statusLabel:'مبرمج' },
+      { id:2, title:'شكراً على الثقة ديالكم 🤍', page:'دار العصري', date:'اليوم، 12:30', status:'published', statusLabel:'تنشر' },
+      { id:3, title:'عرض نهاية الأسبوع — مرحبا بكم', page:'Atelier Atlas', date:'الأحد، 18:00', status:'scheduled', statusLabel:'مبرمج' },
+      { id:4, title:'صباح الخير من عندنا 🌿', page:'مذاق مغربي', date:'مسودة', status:'draft', statusLabel:'مسودة' },
+      { id:5, title:'فكرة جديدة شاركوها مع صحابكم', page:'مجموعة يدوية', date:'البارح، 16:10', status:'manual', statusLabel:'مشاركة يدوية' }
+    ];
+    let state = { posts: seedPosts, pages: defaultPages, imageData: null };
+    try { const saved = JSON.parse(localStorage.getItem('wasla_state') || 'null'); if(saved) state = {...state, ...saved, posts: Array.isArray(saved.posts) ? saved.posts : seedPosts}; } catch(e) {}
+    const saveState = () => { try { localStorage.setItem('wasla_state', JSON.stringify({...state, imageData:null})); } catch(e) {} };
+    const $ = (s, root=document) => root.querySelector(s);
+    const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+    const escapeHtml = (str='') => String(str).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#039;','"':'&quot;'}[c]));
+    const dateLabel = () => new Intl.DateTimeFormat('ar-MA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}).format(new Date());
+    function toast(text) { $('#toastText').textContent = text; $('#toast').classList.add('show'); clearTimeout(window.toastTimer); window.toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),2800); }
+    function renderPages() {
+      $('#homePages').innerHTML = state.pages.map(p => `<div class="page-row"><div class="page-logo ${p.color}">${escapeHtml(p.initials)}</div><div class="page-info"><div class="page-name">${escapeHtml(p.name)}</div><div class="page-followers">${escapeHtml(p.followers)}</div></div><i class="connected" title="مربوط"></i></div>`).join('');
+      $('#targetList').innerHTML = state.pages.map((p,i) => `<label class="target ${i===0?'checked':''}"><input type="checkbox" value="${p.id}" ${i===0?'checked':''}><div class="page-logo ${p.color}">${escapeHtml(p.initials)}</div><div class="target-details"><b>${escapeHtml(p.name)}</b><small>${escapeHtml(p.followers)} · صفحة مربوطة</small></div>${icons.more}</label>`).join('') + `<div class="target group-target"><div class="page-logo two">م</div><div class="target-details"><b>المجموعات</b><small>النشر الآلي غير متاح — مساعدة يدوية فقط</small></div><span class="lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span></div>`;
+      $$('#targetList input').forEach(input => input.addEventListener('change', e => e.target.closest('.target').classList.toggle('checked', e.target.checked)));
+      $('#accountsGrid').innerHTML = state.pages.map(p => `<div class="card account-card"><div class="account-top"><div class="page-logo ${p.color}">${escapeHtml(p.initials)}</div><div><h3>${escapeHtml(p.name)}</h3><p>صفحة فيسبوك</p></div><i class="connected"></i></div><hr><div class="account-foot"><span>${escapeHtml(p.followers)} · ربط تجريبي</span><button data-modal="connect">إدارة الربط</button></div></div>`).join('');
+      $$('#accountsGrid [data-modal]').forEach(b => b.addEventListener('click',()=>openModal('connect')));
+      $('#navCount').textContent = state.posts.filter(p=>p.status==='scheduled').length;
+      $('#kpiScheduled').textContent = state.posts.filter(p=>p.status==='scheduled').length;
+    }
+    function activityRow(post) { return `<div class="activity"><div class="activity-thumb">${post.image ? `<img src="${post.image}" alt="">` : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h16v14H4z"/><path d="m5 16 4-4 3 3 2-2 5 4"/></svg>'}</div><div class="activity-info"><div class="activity-title">${escapeHtml(post.title)}</div><div class="activity-meta">${escapeHtml(post.page)} · ${escapeHtml(post.date)}</div></div><span class="status ${post.status}">${escapeHtml(post.statusLabel)}</span></div>`; }
+    function renderActivity() { $('#activityList').innerHTML = state.posts.slice(0,4).map(activityRow).join(''); }
+    function renderTable() {
+      const query = ($('#tableSearch')?.value || '').toLowerCase(); const filter = $('#statusFilter')?.value || 'all';
+      const list = state.posts.filter(p => (filter==='all'||p.status===filter) && (!query || `${p.title} ${p.page}`.toLowerCase().includes(query)));
+      $('#postsTable').innerHTML = list.length ? list.map(p => `<tr><td><div class="post-cell"><div class="activity-thumb">${p.image ? `<img src="${p.image}" alt="">` : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="m5 16 4-4 3 3 2-2 4 3"/></svg>'}</div><div><b>${escapeHtml(p.title)}</b><small>منشور نصي مع صورة</small></div></div></td><td>${escapeHtml(p.page)}</td><td>${escapeHtml(p.date)}</td><td><span class="status ${p.status}">${escapeHtml(p.statusLabel)}</span></td><td><button class="icon-btn" style="width:30px;height:30px" data-post-menu="${p.id}">${icons.more}</button></td></tr>`).join('') : `<tr><td colspan="5"><div class="empty">${icons.link}<h3>ما لقيت حتى منشور</h3><p>بدّل البحث ولا صايب منشور جديد.</p><button class="btn btn-soft" data-view-link="compose">منشور جديد</button></div></td></tr>`;
+      $$('[data-view-link]', $('#postsTable')).forEach(b => b.addEventListener('click',()=>showView(b.dataset.viewLink)));
+    }
+    const titles = {home:['الرئيسية','كلشي مرتب قدامك، والنشر كيدوز بهدوء.'],compose:['منشور جديد','كتب، اختار، راجع — ومن بعد قرر.'],scheduled:['المبرمج والمنشورات','تبع كل المحتوى ديالك بلا تعقيد.'],accounts:['الحسابات والصفحات','الربط الرسمي ديالك فمكان واحد.'],safety:['قواعد النشر الآمن','المهم هو تخدم مزيان وبلا مخاطرة.']};
+    function showView(view) { $$('.page-view').forEach(x=>x.classList.toggle('active', x.id===`view-${view}`)); $$('.side-nav button[data-view]').forEach(x=>x.classList.toggle('active',x.dataset.view===view)); if(titles[view]) { $('#topTitle').textContent=titles[view][0]; $('#topSubtitle').textContent=titles[view][1]; } if(view==='scheduled') renderTable(); $('#sidebar').classList.remove('open'); window.scrollTo({top:0,behavior:'smooth'}); }
+    function resetComposer() { $('#postText').value=''; $('#charCount').textContent='0 / 63206'; $('#confirmReview').checked=false; $('#publishMode').value='now'; $('#scheduleDate').disabled=true; state.imageData=null; $('#mediaPreview').hidden=true; $('#dropCopy').hidden=false; $('#imageInput').value=''; }
+    function getSelectedPages() { return $$('#targetList input[type=checkbox]:checked').map(i=>state.pages.find(p=>p.id===i.value)).filter(Boolean); }
+    function getPostTitle() { const raw=$('#postText').value.trim(); return raw.split('\n').find(Boolean)?.slice(0,90) || 'منشور بلا عنوان'; }
+    function openModal(type) {
+      const modal=$('#mainModal');
+      if(type==='connect') modal.innerHTML=`<div class="modal-head"><div><h3 id="modalTitle">ربط الصفحات بالطريقة الرسمية</h3><p>أمان الحساب أهم من أي زر نشر. هاد الخطوة كتفتح Meta الرسمي، وما كتطلبش كلمة السر داخل وصلة.</p></div><button class="modal-close" data-close>${icons.more.replace('circle cx="5" cy="12" r="1"','path d="M6 6l12 12M18 6 6 18"').replace('<circle cx="12" cy="12" r="1"/>','')}</button></div><div class="oauth-card">${icons.link}<div><b>OAuth الرسمي ديال Meta</b><span>فالنشر الحقيقي، غير الصلاحيات الضرورية كتطلب: اختيار الصفحات والنشر فيها. أي صلاحية زايدة ما كنحتاجوهاش.</span></div></div><div class="modal-list"><div>${icons.check}<span>ما تعطيش كلمة السر لأي أداة كتقول لك "ربط سريع".</span></div><div>${icons.check}<span>الصفحات المربوطة كتبان هنا من بعد الموافقة الرسمية.</span></div><div>${icons.check}<span>المجموعات ما غاديش تتربط بالنشر الآلي.</span></div></div><div class="modal-actions"><button class="btn btn-primary" id="demoConnect">كمل بالوضع التجريبي</button><button class="btn btn-outline" data-close>نسد</button></div>`;
+      else modal.innerHTML=`<div class="modal-head"><div><h3 id="modalTitle">مساعدة سريعة</h3><p>هاد النسخة مصممة باش تكون واضحة حتى إلا ما كنتيش مبرمج.</p></div><button class="modal-close" data-close>×</button></div><div class="modal-list" style="margin-top:22px"><div>${icons.check}<span>دير منشور جديد، زيد الكتابة والصورة.</span></div><div>${icons.check}<span>اختار الصفحات فقط، أو استعمل مساعدة يدوية للمجموعات.</span></div><div>${icons.check}<span>راجع المعاينة، ومن بعد برمج ولا نشر.</span></div><div>${icons.check}<span>إلى بغيتي النشر الحقيقي، خاص إعداد Meta App وOAuth رسمي فالسيرفر ديالك.</span></div></div><div class="modal-actions"><button class="btn btn-primary" data-close>فهمت، شكراً</button></div>`;
+      $('#modalBackdrop').classList.add('show');
+      $$('[data-close]', modal).forEach(b=>b.addEventListener('click',closeModal));
+      $('#demoConnect')?.addEventListener('click',()=>{ closeModal(); toast('تفعّل الوضع التجريبي — الصفحات واجدين للتجربة'); });
+    }
+    function closeModal() { $('#modalBackdrop').classList.remove('show'); }
+    function openPreview(post) {
+      const modal=$('#mainModal');
+      const image=post.image ? `<img src="${post.image}" alt="معاينة المنشور" style="width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin-top:14px">` : '';
+      modal.innerHTML=`<div class="modal-head"><div><h3 id="modalTitle">راجع المنشور قبل الإرسال</h3><p>شوف النص والوجهة مرة أخيرة. ما غادي يتبعت حتى شي حاجة بلا تأكيدك.</p></div><button class="modal-close" data-close>×</button></div><div style="background:#fafbfc;border:1px solid var(--line);border-radius:14px;padding:15px;margin-top:18px"><div style="display:flex;gap:8px;align-items:center;color:var(--muted);font-size:10px"><span class="status ${post.mode==='later'?'scheduled':'published'}">${post.mode==='later'?'مبرمج':'غادي ينشر دابا'}</span><span>${escapeHtml(post.page)}</span></div><p style="white-space:pre-wrap;line-height:1.9;font-size:13px;margin:13px 0 0">${escapeHtml(post.fullText)}</p>${image}</div><div class="modal-list"><div>${icons.check}<span>الوجهة: ${escapeHtml(post.page)}</span></div><div>${icons.check}<span>المجموعات ما داخلاش فهاد الإرسال.</span></div><div>${icons.check}<span>${post.mode==='later' ? 'الوقت: '+escapeHtml(post.date) : 'غادي يبقى القرار الأخير عندك قبل النشر.'}</span></div></div><div class="modal-actions"><button class="btn btn-primary" id="confirmPublish">${post.mode==='later'?'أكد البرمجة':'أكد النشر التجريبي'}</button><button class="btn btn-outline" data-close>رجع للمحرر</button></div>`;
+      $('#modalBackdrop').classList.add('show');
+      $$('[data-close]', modal).forEach(b=>b.addEventListener('click',closeModal));
+      $('#confirmPublish').addEventListener('click',()=>commitPublication(post));
+    }
+    function commitPublication(post) {
+      state.posts.unshift({id:Date.now(),title:getPostTitle(),page:post.page,date:post.mode==='later'?post.date:'اليوم، دابا',status:post.mode==='later'?'scheduled':'published',statusLabel:post.mode==='later'?'مبرمج':'تنشر',image:state.imageData||null});
+      saveState(); renderPages(); renderActivity(); closeModal(); resetComposer(); showView('scheduled'); toast(post.mode==='later'?'تسجل المنشور فالبرمجة بنجاح':'تسجل المنشور فالوضع التجريبي — ما تنشر والو ففيسبوك');
+    }
+    function publishOrSchedule() {
+      const text=$('#postText').value.trim(), pages=getSelectedPages(), mode=$('#publishMode').value;
+      if(!text) return toast('كتب شي كلام فالمنشور أولاً');
+      if(!pages.length) return toast('اختار صفحة وحدة على الأقل');
+      if(!$('#confirmReview').checked) return toast('أكد أنك راجعت المنشور قبل الإرسال');
+      const date = mode==='later' ? ($('#scheduleDate').value ? new Date($('#scheduleDate').value).toLocaleString('ar-MA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '') : dateLabel();
+      if(mode==='later'&&!date) return toast('اختار نهار ووقت البرمجة');
+      openPreview({fullText:text,page:pages.map(x=>x.name).join('، '),date,mode,image:state.imageData||null});
+    }
+    // Navigation
+    $$('[data-view]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.view)));
+    $$('[data-view-link]').forEach(b=>b.addEventListener('click',()=>showView(b.dataset.viewLink)));
+    $$('[data-modal]').forEach(b=>b.addEventListener('click',()=>openModal(b.dataset.modal)));
+    $('#topNew').addEventListener('click',()=>showView('compose')); $('#miniNew').addEventListener('click',()=>showView('compose'));
+    $('#mobileMenu').addEventListener('click',()=>$('#sidebar').classList.toggle('open'));
+    $('#modalBackdrop').addEventListener('click',e=>{if(e.target.id==='modalBackdrop')closeModal()});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
+    $('#postText').addEventListener('input',e=>$('#charCount').textContent=`${e.target.value.length.toLocaleString('ar-MA')} / 63,206`);
+    $$('.suggestions button').forEach(b=>b.addEventListener('click',()=>{ $('#postText').value=b.dataset.fill; $('#postText').dispatchEvent(new Event('input')); $('#postText').focus(); }));
+    $('#publishMode').addEventListener('change',e=>{ $('#scheduleDate').disabled=e.target.value!=='later'; if(e.target.value==='later'&&!$('#scheduleDate').value){const d=new Date(Date.now()+86400000);d.setMinutes(0,0,0); $('#scheduleDate').value=d.toISOString().slice(0,16);} });
+    $('#publishNow').addEventListener('click',publishOrSchedule);
+    $('#saveDraft').addEventListener('click',()=>{if(!$('#postText').value.trim())return toast('كتب شي كلام قبل ما تحفظ المسودة'); const pages=getSelectedPages(); state.posts.unshift({id:Date.now(),title:getPostTitle(),page:pages.map(x=>x.name).join('، ')||'ما تحددتش',date:'مسودة جديدة',status:'draft',statusLabel:'مسودة',image:state.imageData||null});saveState();renderPages();renderActivity();toast('تحفظات المسودة — تقدر تكملها من التاريخ');});
+    $('#clearComposer').addEventListener('click',()=>{resetComposer();toast('تفرغ المحرر')});
+    $('#tableSearch').addEventListener('input',renderTable); $('#statusFilter').addEventListener('change',renderTable);
+    $('#manualShare').addEventListener('click',()=>{ const text=$('#postText').value.trim() || 'كتب المنشور ديالك هنا، ومن بعد نسخو للمجموعة.'; if(navigator.clipboard) navigator.clipboard.writeText(text).catch(()=>{}); openModal('help'); toast('تنسخ النص — دابا لصقو يدوياً فالمجموعة'); });
+    $('#imageInput').addEventListener('change',e=>{const file=e.target.files[0]; if(!file)return; if(file.size>8*1024*1024)return toast('الصورة كبيرة بزاف — اختار صورة أقل من 8MB'); const reader=new FileReader(); reader.onload=ev=>{state.imageData=ev.target.result; $('#dropCopy').hidden=true; $('#mediaPreview').hidden=false; $('#mediaPreview').innerHTML=`<img src="${ev.target.result}" alt="معاينة"><div><b>${escapeHtml(file.name)}</b><small>${Math.round(file.size/1024)} KB · جاهزة للمعاينة</small></div><button type="button" id="removeMedia">حيد</button>`; $('#removeMedia').addEventListener('click',e=>{e.preventDefault();e.stopPropagation();state.imageData=null;$('#mediaPreview').hidden=true;$('#dropCopy').hidden=false;$('#imageInput').value='';});}; reader.readAsDataURL(file); });
+    const drop=$('#dropZone'); ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('dragging')})); ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('dragging')})); drop.addEventListener('drop',e=>{if(e.dataTransfer.files.length){$('#imageInput').files=e.dataTransfer.files;$('#imageInput').dispatchEvent(new Event('change'));}});
+    renderPages(); renderActivity();
+  </script>
+</body>
+</html>
