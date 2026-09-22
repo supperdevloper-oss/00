@@ -46,6 +46,7 @@ class Book(FPDF):
         self.show_furniture = False
         self._cover_mode = False
         self._skip_break = False
+        self._page_top = 18.0
         self.toc: list = []
         self.toc_entries: list = []
         self.set_margins(MARGIN, 18, MARGIN)
@@ -62,6 +63,15 @@ class Book(FPDF):
         self.set_lang("ar")
 
     # ------------------------------------------------------------------ furniture
+    def add_page(self, *args, **kwargs):
+        super().add_page(*args, **kwargs)
+        # يُستدعى بعد header()؛ أعلى الصفحة الفعلية يسمح بتمييز صفحة «نظيفة»
+        self._page_top = self.get_y()
+
+    def _page_is_fresh(self):
+        """صفحة بدأت حديثاً ولم يُرسم عليها محتوى بعد."""
+        return self.get_y() <= self._page_top + 1.0
+
     def header(self):
         if not self.show_furniture:
             return
@@ -571,12 +581,12 @@ def render(pdf: Book, text: str):
             pdf._skip_break = True
             continue
 
-        # ---- ملء بالقلم (قبل المربعات حتى لا يُفسَر كمربع)
-        m = re.match(r"^::fill\s+(\d+)\s*(.*)$", s)
+        # ---- ملء بالقلم (قبل المربعات حتى لا يُفسَر كمربع؛ يقبل ":: fill" و "::fill")
+        m = re.match(r"^::\s*fill\s+(\d+)\s*(.*)$", s)
         if m:
             pdf.fill_lines(int(m.group(1)), m.group(2).strip())
             continue
-        m = re.match(r"^::row\s+(.*)$", s)
+        m = re.match(r"^::\s*row\s+(.*)$", s)
         if m:
             pdf.fill_row(m.group(1).strip())
             continue
@@ -592,10 +602,14 @@ def render(pdf: Book, text: str):
                 if t == "::end":
                     i += 1
                     break
-                if t.startswith("#") or (t.startswith("::") and not t.startswith("::end")):
+                # المربع ينتهي عند أي أمر أو بنية أخرى (حتى لو نسي ::end):
+                if t.startswith(("#", "::", "@", "|")):
+                    break
+                if t.startswith(">>") and key != "حوار":
                     break
                 if t:
-                    body.append(t)
+                    # داخل مربع الحوار: نُزيل وسم ">>" السطرية
+                    body.append(t[2:].strip() if (key == "حوار" and t.startswith(">>")) else t)
                 i += 1
             label, color = LABELS.get(key, (title or key, ACCENT))
             if title and key in LABELS:
@@ -645,7 +659,8 @@ def render(pdf: Book, text: str):
             if not pdf.show_furniture:
                 pdf.show_furniture = True
             pdf.running_head = t
-            if getattr(pdf, "_skip_break", False):
+            # لا نُكرر فصل الصفحة إذا كانت نظيفة (غلاف أو @pagebreak مباشرة قبل العنوان)
+            if getattr(pdf, "_skip_break", False) or pdf._page_is_fresh():
                 pdf._skip_break = False
                 pdf.set_y(24)
             else:
@@ -658,7 +673,8 @@ def render(pdf: Book, text: str):
             title = s[2:].strip()
             pdf.show_furniture = True
             pdf.running_head = title
-            pdf.add_page()
+            if not pdf._page_is_fresh():
+                pdf.add_page()
             pdf.set_y(34)
             pdf.h1(title)
             pdf.toc.append((1, title, pdf.page_no()))
